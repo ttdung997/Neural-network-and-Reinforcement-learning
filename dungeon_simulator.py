@@ -1,21 +1,23 @@
-from enums import *
 import random
+
+FORWARD = 0
+BACKWARD = 1
 
 class DungeonSimulator:
     def __init__(self, length=5, slip=0.1, small=2, large=10):
-        self.length = length # Length of the dungeon
-        self.slip = slip  # probability of 'slipping' an action
-        self.small = small  # payout for BACKWARD action
-        self.large = large  # payout at end of chain for FORWARD action
-        self.state = 0  # Start at beginning of the dungeon
+        self.length = length # Độ dài hang
+        self.slip = slip  # xác suất trượt chân
+        self.small = small  # thưởng cho hành động lùi
+        self.large = large  # thưởng cho hành động tiến đến cuối hang
+        self.state = 0  # trạng thái bắt đầu
 
     def take_action(self, action):
         if random.random() < self.slip:
-            action = not action  # agent slipped, reverse action taken
-        if action == BACKWARD:  # BACKWARD: go back to the beginning, get small reward
+            action = not action  # đảo ngược hành động
+        if action == BACKWARD:  # hành động lùi: trở về trạng thái bắt đầu
             reward = self.small
             self.state = 0
-        elif action == FORWARD:  # FORWARD: go up along the dungeon
+        elif action == FORWARD:  # hành động tiến
             if self.state < self.length - 1:
                 self.state += 1
                 reward = 0
@@ -24,5 +26,5 @@ class DungeonSimulator:
         return self.state, reward
 
     def reset(self):
-        self.state = 0  # Reset state to zero, the beginning of dungeon
+        self.state = 0  # trở về trạng thái bắt đầu
         return self.state
